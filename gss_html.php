@@ -97,7 +97,7 @@ function gss_html_output($ids,$name,$style,$options,$carousel,$position) {
 	$gss_info .= "\n\t</div>";
 	
 	// begin gss html assembly
-	$html = "\n\n" . '<div id="' . $name . '" class="gss-container' . $no_captions_class . '"' . $style . '>' . "\n\t";
+	$html = "\n\n" . '<div id="' . $name . '" class="gss-container' . $no_captions_class . ' '. ($position_top? 'summary-position-top': 'summary-position-bottom' ) .'"' . $style . '>' . "\n\t";
 	if ( $position_top ){
 		$html .= $gss_info;
 	}
