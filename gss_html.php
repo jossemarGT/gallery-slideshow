@@ -1,6 +1,6 @@
 <?php
 
-function gss_html_output($ids,$name,$style,$options,$carousel) {
+function gss_html_output($ids,$name,$style,$options,$carousel,$position) {
 	$ids = explode( ',', $ids );
 	$slide_count = count($ids);
 	$options = html_entity_decode($options);
@@ -53,16 +53,11 @@ function gss_html_output($ids,$name,$style,$options,$carousel) {
 	foreach( $opts as $k => $v ){
 		$options_string .= 'data-cycle-' . $k . '="' . $v . '"' . "\n\t\t";
 	}
-	// begin gss html assembly
-	$html = "\n\n" . '<div id="' . $name . '" class="gss-container' . $no_captions_class . '"' . $style . '>' . "\n\t";
-	$html .= 	'<div class="cycle-slideshow" 
-		'. $options_string . 
-	'>';
-	if( $has_captions ){
-		$html .= $pager;
-	}
-	$html .= $slides . "\t</div>\n\t";
-	$html .= 	'<div class="gss-info">' . "\n\t\t";
+	
+	// gss info string
+	$position_top = stripos($position,"top") !== false;
+	
+	$gss_info = '<div class="gss-info">' . "\n\t\t";
 	
 	if( !empty($carousel) ){
 		$thumbs_to_show = $slide_count < 8 ? $slide_count : 8;
@@ -87,19 +82,38 @@ function gss_html_output($ids,$name,$style,$options,$carousel) {
 		foreach( $carousel_opts as $k => $v){
 			$carousel_opts_string .= 'data-cycle-' . $k . '="' . $v . '"' . "\n\t\t";
 		}
-		$html .= '<div class="cycle-slideshow carousel-pager"
+		$gss_info .= '<div class="cycle-slideshow carousel-pager"
 		' . $carousel_opts_string . $carousel_vis_set . ">\n" . $carousel_slides . "\t\t</div>\n\t\t";
 	}
 	
-	$html .= 		'<div class="gss-nav"><div id="' . $name . '_prev" class="gss-prev">&lt;</div><div id="' . $name . '_next" class="gss-next">&gt;</div></div>';
+	$gss_info .= 		'<div class="gss-nav"><div id="' . $name . '_prev" class="gss-prev">&lt;</div><div id="' . $name . '_next" class="gss-next">&gt;</div></div>';
 	if( !$has_captions ){
-		$html .= $pager;
+		$gss_info .= $pager;
 	}
 	if( $has_captions ){
-		$html .= 		'<div class="gss-long-cap">' . $longest_cap['text'] . "</div>";
-		$html .= 		'<div id="' . $name . '_captions" class="gss-captions">' . "</div>";
+		$gss_info .= 		'<div class="gss-long-cap">' . $longest_cap['text'] . "</div>";
+		$gss_info .= 		'<div id="' . $name . '_captions" class="gss-captions">' . "</div>";
 	}
-	$html .= "\n\t</div>\n</div>\n\n";
+	$gss_info .= "\n\t</div>";
+	
+	// begin gss html assembly
+	$html = "\n\n" . '<div id="' . $name . '" class="gss-container' . $no_captions_class . '"' . $style . '>' . "\n\t";
+	if ( $position_top ){
+		$html .= $gss_info;
+	}
+	
+	$html .= 	'<div class="cycle-slideshow" 
+		'. $options_string . 
+	'>';
+	if( $has_captions ){
+		$html .= $pager;
+	}
+	$html .= $slides . "\t</div>\n\t";
+	
+	if ( ! $position_top ){
+		$html .= $gss_info;
+	}
+	$html .= "\n</div>\n\n";
 	return $html;
 }
 

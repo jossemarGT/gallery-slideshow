@@ -15,11 +15,11 @@ class gallery_ss{
     }
 
     static function gss_shortcode($atts) { 
-		extract( shortcode_atts( array( 'ids' => '', 'name' => 'gslideshow', 'style' => '', 'options' => '', 'carousel' => '' ), $atts ) );
+		extract( shortcode_atts( array( 'ids' => '', 'name' => 'gslideshow', 'style' => '', 'options' => '', 'carousel' => '', 'position' => '' ), $atts ) );
         if ( !function_exists('gss_html_output') ) {
 			require 'gss_html.php';
 		}
-		$output = gss_html_output($ids,$name,$style,$options,$carousel);
+		$output = gss_html_output($ids,$name,$style,$options,$carousel,$position);
         return $output;
     }
 
