@@ -1,6 +1,6 @@
 <?php
 
-function gss_html_output($ids,$name,$style,$options,$carousel,$position) {
+function gss_html_output($ids,$name,$style,$options,$carousel,$position,$hashprefix) {
 	$ids = explode( ',', $ids );
 	$slide_count = count($ids);
 	$options = html_entity_decode($options);
@@ -18,7 +18,7 @@ function gss_html_output($ids,$name,$style,$options,$carousel,$position) {
 		$attachment = get_post( $image_id, 'ARRAY_A' );
 		$src = wp_get_attachment_image_src( $image_id, 'full' );
 		$excerpt = htmlspecialchars($attachment['post_excerpt']);
-		$slides .= "\n\t\t\t<img src=\"$src[0]\" alt=\"$excerpt\" data-cycle-hash=\"img-".$slide_number."\" />\n";
+		$slides .= "\n\t\t\t<img src=\"$src[0]\" alt=\"$excerpt\" data-cycle-hash=\"".$hashprefix."-".$slide_number."\" />\n";
 		if( !empty($carousel) ){
 			$carousel_slides .= "\t\t\t<div><img src=\"$src[0]\" title=\"$excerpt\" /></div>\n";
 		}
