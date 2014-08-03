@@ -3,7 +3,7 @@
 }
 
 img.cycle-slide{
-	top:auto !important;
+	top:auto; /*!important;*/
 	bottom:0 !important;
 	max-width:100% !important;
 	max-height:100%;	
