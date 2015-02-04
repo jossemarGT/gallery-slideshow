@@ -13,12 +13,14 @@ function gss_html_output($ids,$name,$style,$options,$carousel,$position,$hashpre
 	$carousel_slides = '';
 	$pager = "\n\t\t\t<div id=\"" . $name . '_pager" class="gss-pager"></div>';
 	$slide_number = 1;
-	
+
 	foreach( $ids as $image_id ){
 		$attachment = get_post( $image_id, 'ARRAY_A' );
 		$src = wp_get_attachment_image_src( $image_id, 'full' );
 		$excerpt = htmlspecialchars($attachment['post_excerpt']);
-		$slides .= "\n\t\t\t<img src=\"$src[0]\" alt=\"$excerpt\" data-cycle-hash=\"".$hashprefix."-".$slide_number."\" />\n";
+		$slides .= "\n\t\t\t<img src=\"$src[0]\" alt=\"$excerpt\""
+		.($hashprefix ? "data-cycle-hash=\"".$hashprefix."-".$slide_number : "" )
+		."\" />\n";
 		if( !empty($carousel) ){
 			$carousel_slides .= "\t\t\t<div><img src=\"$src[0]\" title=\"$excerpt\" /></div>\n";
 		}
@@ -56,12 +58,12 @@ function gss_html_output($ids,$name,$style,$options,$carousel,$position,$hashpre
 	foreach( $opts as $k => $v ){
 		$options_string .= 'data-cycle-' . $k . '="' . $v . '"' . "\n\t\t";
 	}
-	
+
 	// gss info string
 	$position_top = stripos($position,"top") !== false;
-	
+
 	$gss_info = '<div class="gss-info">' . "\n\t\t";
-	
+
 	if( !empty($carousel) ){
 		$thumbs_to_show = $slide_count < 8 ? $slide_count : 8;
 		$default_carousel_opts = array(
@@ -75,7 +77,7 @@ function gss_html_output($ids,$name,$style,$options,$carousel,$position,$hashpre
 		parse_str( $carousel, $carousel_opts );
 
 		$carousel_vis_set = array_key_exists('carousel-visible', $carousel_opts) ? 'data-car-vis-set="true"' : '';
-		
+
 		foreach( $default_carousel_opts as $k => $v ){
 			if( !array_key_exists( $k, $carousel_opts ) ){
 				$carousel_opts[$k] = $v;
@@ -88,7 +90,7 @@ function gss_html_output($ids,$name,$style,$options,$carousel,$position,$hashpre
 		$gss_info .= '<div class="cycle-slideshow carousel-pager"
 		' . $carousel_opts_string . $carousel_vis_set . ">\n" . $carousel_slides . "\t\t</div>\n\t\t";
 	}
-	
+
 	$gss_info .= 		'<div class="gss-nav"><div id="' . $name . '_prev" class="gss-prev">&lt;</div><div id="' . $name . '_next" class="gss-next">&gt;</div></div>';
 	if( !$has_captions ){
 		$gss_info .= $pager;
@@ -98,21 +100,21 @@ function gss_html_output($ids,$name,$style,$options,$carousel,$position,$hashpre
 		$gss_info .= 		'<div id="' . $name . '_captions" class="gss-captions">' . "</div>";
 	}
 	$gss_info .= "\n\t</div>";
-	
+
 	// begin gss html assembly
 	$html = "\n\n" . '<div id="' . $name . '" class="gss-container' . $no_captions_class . ' '. ($position_top? 'summary-position-top': 'summary-position-bottom' ) .'"' . $style . '>' . "\n\t";
 	if ( $position_top ){
 		$html .= $gss_info;
 	}
-	
-	$html .= 	'<div class="cycle-slideshow" 
-		'. $options_string . 
+
+	$html .= 	'<div class="cycle-slideshow"
+		'. $options_string .
 	'>';
 	if( $has_captions ){
 		$html .= $pager;
 	}
 	$html .= $slides . "\t</div>\n\t";
-	
+
 	if ( ! $position_top ){
 		$html .= $gss_info;
 	}
